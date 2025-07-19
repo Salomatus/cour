@@ -1,14 +1,14 @@
-{% extends 'base.html' %}
+{% extends 'mailings/base.html' %}
 
 {% block content %}
     <h2>Сообщения</h2>
-    <a href="{% url 'mailing:message_create' %}">Создать сообщение</a>
+    <a href="{% url 'mailings:message_form' %}">Создать сообщение</a>
     <ul>
         {% for message in messages %}
             <li>
                 {{ message.subject }} - {{ message.body }}
-                <a href="{% url 'mailing:message_update' message.pk %}">Изменить</a>
-                <a href="{% url 'mailing:message_delete' message.pk %}">Удалить</a>
+                <a href="{% url 'mailings:message_form' message.pk %}">Изменить</a>
+                <a href="{% url 'mailings:message_confirm_delete' message.pk %}">Удалить</a>
             </li>
         {% endfor %}
     </ul>

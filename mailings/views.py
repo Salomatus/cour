@@ -17,6 +17,7 @@ from mailings.models import Client, Mailing, MailingAttempt, Message
 
 
 @cache_page(60 * 15)  # Кешируем на 15 минут
+
 @login_required
 def home(request):
     total_mailings = Mailing.objects.count()
@@ -27,12 +28,12 @@ def home(request):
         "active_mailings": active_mailings,
         "unique_clients": unique_clients,
     }
-    return render(request, "mailing/home.html", context)
+    return render(request, "mailings/home.html", context)
 
 
 class MessageListView(LoginRequiredMixin, ListView):
     model = Message
-    template_name = "mailing/message_list.html"
+    template_name = "mailings/message_list.html"
     context_object_name = "messages"
 
     def get_queryset(self):
@@ -41,9 +42,9 @@ class MessageListView(LoginRequiredMixin, ListView):
 
 class MessageCreateView(LoginRequiredMixin, CreateView):
     model = Message
-    template_name = "mailing/message_form.html"
+    template_name = "mailings/message_form.html"
     fields = ["subject", "body"]
-    success_url = reverse_lazy("mailing:message_list")
+    success_url = reverse_lazy("mailings:message_list")
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -59,9 +60,9 @@ class MessageCreateView(LoginRequiredMixin, CreateView):
 
 class MessageUpdateView(LoginRequiredMixin, UpdateView):
     model = Message
-    template_name = "mailing/message_form.html"
+    template_name = "mailings/message_form.html"
     fields = ["subject", "body"]
-    success_url = reverse_lazy("mailing:message_list")
+    success_url = reverse_lazy("mailings:message_list")
 
     def get_queryset(self):
         return Message.objects.filter(owner=self.request.user)
@@ -79,8 +80,8 @@ class MessageUpdateView(LoginRequiredMixin, UpdateView):
 
 class MessageDeleteView(LoginRequiredMixin, DeleteView):
     model = Message
-    template_name = "mailing/message_confirm_delete.html"
-    success_url = reverse_lazy("mailing:message_list")
+    template_name = "mailings/message_confirm_delete.html"
+    success_url = reverse_lazy("mailings:message_list")
 
     def get_queryset(self):
         return Message.objects.filter(owner=self.request.user)
@@ -92,7 +93,7 @@ class MessageDeleteView(LoginRequiredMixin, DeleteView):
 
 class ClientListView(LoginRequiredMixin, ListView):
     model = Client
-    template_name = "mailing/client_list.html"
+    template_name = "mailings/client_list.html"
     context_object_name = "clients"
 
     def get_queryset(self):
@@ -101,9 +102,9 @@ class ClientListView(LoginRequiredMixin, ListView):
 
 class ClientCreateView(LoginRequiredMixin, CreateView):
     model = Client
-    template_name = "mailing/client_form.html"
+    template_name = "mailings/client_form.html"
     fields = ["email", "full_name", "comment"]
-    success_url = reverse_lazy("mailing:client_list")
+    success_url = reverse_lazy("mailings:client_list")
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -119,9 +120,9 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
 
 class ClientUpdateView(LoginRequiredMixin, UpdateView):
     model = Client
-    template_name = "mailing/client_form.html"
+    template_name = "mailings/client_form.html"
     fields = ["email", "full_name", "comment"]
-    success_url = reverse_lazy("mailing:client_list")
+    success_url = reverse_lazy("mailings:client_list")
 
     def get_queryset(self):
         return Client.objects.filter(owner=self.request.user)
@@ -139,8 +140,8 @@ class ClientUpdateView(LoginRequiredMixin, UpdateView):
 
 class ClientDeleteView(LoginRequiredMixin, DeleteView):
     model = Client
-    template_name = "mailing/client_confirm_delete.html"
-    success_url = reverse_lazy("mailing:client_list")
+    template_name = "mailings/client_confirm_delete.html"
+    success_url = reverse_lazy("mailings:client_list")
 
     def get_queryset(self):
         return Client.objects.filter(owner=self.request.user)
@@ -152,7 +153,7 @@ class ClientDeleteView(LoginRequiredMixin, DeleteView):
 
 class MailingListView(LoginRequiredMixin, ListView):
     model = Mailing
-    template_name = "mailing/mailing_list.html"
+    template_name = "mailings/mailing_list.html"
     context_object_name = "mailings"
 
     def get_queryset(self):
@@ -161,9 +162,9 @@ class MailingListView(LoginRequiredMixin, ListView):
 
 class MailingCreateView(LoginRequiredMixin, CreateView):
     model = Mailing
-    template_name = "mailing/mailing_form.html"
+    template_name = "mailings/mailing_form.html"
     fields = ["start_time", "end_time", "status", "message", "clients"]
-    success_url = reverse_lazy("mailing:mailing_list")
+    success_url = reverse_lazy("mailings:mailing_list")
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -188,9 +189,9 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
 
 class MailingUpdateView(LoginRequiredMixin, UpdateView):
     model = Mailing
-    template_name = "mailing/mailing_form.html"
+    template_name = "mailings/mailing_form.html"
     fields = ["start_time", "end_time", "status", "message", "clients"]
-    success_url = reverse_lazy("mailing:mailing_list")
+    success_url = reverse_lazy("mailings:mailing_list")
 
     def get_queryset(self):
         return Mailing.objects.filter(owner=self.request.user)
@@ -208,8 +209,8 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
 
 class MailingDeleteView(LoginRequiredMixin, DeleteView):
     model = Mailing
-    template_name = "mailing/mailing_confirm_delete.html"
-    success_url = reverse_lazy("mailing:mailing_list")
+    template_name = "mailings/mailing_confirm_delete.html"
+    success_url = reverse_lazy("mailings:mailing_list")
 
     def get_queryset(self):
         return Mailing.objects.filter(owner=self.request.user)
@@ -230,13 +231,13 @@ class StartMailingView(LoginRequiredMixin, View):
             messages.error(
                 request, "Нельзя запустить рассылку, дата начала которой уже прошла"
             )
-            return redirect("mailing:mailing_list")
+            return redirect("mailings:mailing_list")
 
         mailing.status = "running"
         mailing.save()
 
         messages.success(request, f'Рассылка "{mailing.pk}" была запущена.')
-        return redirect("mailing:mailing_list")
+        return redirect("mailings:mailing_list")
 
 
 @login_required
@@ -267,4 +268,4 @@ def mailing_reports(request):
         "mailings": mailings,
         "mailing_stats": mailing_stats,
     }
-    return render(request, "mailing/mailing_reports.html", context)
+    return render(request, "mailings/mailing_reports.html", context)

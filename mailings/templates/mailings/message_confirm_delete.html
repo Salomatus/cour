@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'mailings/base.html' %}
 
 {% block content %}
     <h2>Удалить сообщение</h2>
@@ -6,6 +6,6 @@
     <form method="post">
         {% csrf_token %}
         <button type="submit">Удалить</button>
-        <a href="{% url 'mailing:message_list' %}">Отмена</a>
+        <a href="{% url 'mailings:message_list' %}">Отмена</a>
     </form>
 {% endblock %}

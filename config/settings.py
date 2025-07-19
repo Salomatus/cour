@@ -124,7 +124,7 @@ DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 
 SITE_ID = 1
 
-ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_LOGIN_METHODS = {'username', 'email'}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 
 CACHE_ENABLED = True
