@@ -5,8 +5,6 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin,
                                         UserPassesTestMixin)
-from django.db import models
-from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -319,13 +317,13 @@ class AttemptListView(LoginRequiredMixin, ListView):
 
 
 @login_required
-@permission_required("messaging.change_mailing")
+@permission_required("mailings.change_mailing")
 def disable_mailing(request, mailing_id):
     mailing = get_object_or_404(Mailing, pk=mailing_id)
     mailing.is_active = False
     mailing.status = Mailing.COMPLETED
     mailing.save()
-    return redirect("messaging:mailing_list")
+    return redirect("mailings:mailing_list")
 
 
 class DisableMailingView(View):
@@ -333,6 +331,6 @@ class DisableMailingView(View):
         mailing = get_object_or_404(Mailing, pk=pk)
         mailing.is_active = False
         mailing.save()
-        return redirect("messaging:mailing_list")
+        return redirect("mailings:mailing_list")
 
 

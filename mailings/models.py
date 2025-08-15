@@ -70,7 +70,6 @@ class Mailing(models.Model):
             ("can_disable_mailings", "Может отключать рассылки"),
         ]
 
-
 class Attempt(models.Model):
     SUCCESS = "success"
     FAILURE = "failure"
